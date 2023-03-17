@@ -5,27 +5,32 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import AmountSelector from "../amountSelector";
 
 const ShopItemCard = (props) => {
+  const inCart = true;
   return (
-    <Card >
-      <CardMedia
-        sx={{ height: 140 }}
-        image=""
-        title="green iguana"
-      />
+    <Card>
+      <CardMedia image="" title="green iguana" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          {props.title}{" "}
+          {inCart && <Typography variant="overline">(in cart)</Typography>}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
+        <Typography variant="subtitle1">Amount: </Typography>
+        <AmountSelector />
+
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        {inCart ? (
+          <React.Fragment>
+            <Button size="small" onClick={() => {}}>
+              Remove from cart
+            </Button>
+          </React.Fragment>
+        ) : (
+          <Button size="small">Add to cart</Button>
+        )}
       </CardActions>
     </Card>
   );
