@@ -55,10 +55,24 @@ const getBrandsObj = (offset) => {
       code: "brand_9",
     },
   ];
+  const filterItem = (offset, filterQuery) =>
+    new Promise((resolve) =>
+      setTimeout(
+        resolve(
+          brands
+            .filter((x) => x.title.toLowerCase().match(filterQuery.title))
+            .slice(offset, offset + 5)
+        ),
+        450
+      )
+    );
 
-  return new Promise((resolve) =>
-    setTimeout(resolve(brands.slice(offset, offset + 5)), 150)
-  );
+  const get = (offset) =>
+    new Promise((resolve) =>
+      setTimeout(resolve(brands.slice(offset, offset + 5)), 450)
+    );
+
+  return { get, filterItem };
 };
 
 export default getBrandsObj;

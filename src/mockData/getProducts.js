@@ -110,7 +110,34 @@ const getProductsObj = () => {
     },
   ];
 
-  const filterItem = (filterQuery) => {};
+  const filterItem = (offset, filterQuery) => {
+    let filteredProducts = [];
+    if (filterQuery.brands.length !== 0) {
+      filterQuery.brands.forEach((brand) => {
+        filteredProducts = [
+          ...filteredProducts,
+          ...products.filter((x) => x.brand === brand),
+        ];
+      });
+    } else {
+      filteredProducts = products;
+    }
+
+    if (filterQuery.price.length !== 0) {
+      filteredProducts = filteredProducts.filter(
+        (x) => x.regular_price.value > filterQuery.price[0]
+      );
+      console.log(filterQuery.price);
+      filteredProducts = filteredProducts.filter(
+        (x) => x.regular_price.value < filterQuery.price[1]
+      );
+    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(filteredProducts.slice(offset, offset + 6));
+      }, 500);
+    });
+  };
 
   const get = (offset) =>
     new Promise((resolve) => {
@@ -119,7 +146,11 @@ const getProductsObj = () => {
       }, 500);
     });
 
-  return { get, filterItem };
+  const getMax = () => {
+    return Math.max(...products.map((x) => x.regular_price.value));
+  };
+
+  return { get, filterItem, getMax };
 };
 
 export default getProductsObj;

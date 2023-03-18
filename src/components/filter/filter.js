@@ -1,39 +1,59 @@
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Button, Grid } from "@mui/material";
 import BrandList from "./brandList";
 import React from "react";
 import PriceSelector from "./priceSelector";
+import FilterItem from "./filterItem";
 
 const Filter = (props) => {
+  const [changed, setChanged] = React.useState(props.hasQuery);
+  const [brands, setBrands] = React.useState([]);
+  const [price, setPrice] = React.useState([]);
+
+  React.useEffect(() => setChanged(props.hasQuery), [props.hasQuery]);
+
   return (
     <React.Fragment>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Brands </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <BrandList />
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Select price </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <PriceSelector />
-        </AccordionDetails>
-      </Accordion>
+      <FilterItem title="Brands">
+        <BrandList
+          brandSet={(brand) => {
+            setChanged(false);
+            setBrands([...brands, brand]);
+          }}
+          brandUnset={(brand) => {
+            setChanged(false);
+            setBrands(brands.filter((x) => x !== brand));
+          }}
+          checked={brands}
+        />
+      </FilterItem>
+      <FilterItem title="Select price">
+        <PriceSelector
+          setPrice={(price) => {
+            setChanged(false);
+            setPrice(price);
+          }}
+          isClear={price.length === 0}
+        />
+      </FilterItem>
+      <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+        <Grid item>
+          <Button
+            size="large"
+            onClick={() => {
+              if (changed) {
+                props.clear();
+                setBrands([]);
+                setPrice([]);
+                return;
+              }
+              props.filterProducts({ brands, price });
+              setChanged(true);
+            }}
+          >
+            {changed ? "Clear filter" : "Show"}
+          </Button>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 };

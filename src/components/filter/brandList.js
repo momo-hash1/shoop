@@ -6,33 +6,60 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { green, grey } from "@mui/material/colors";
+import useBrand from "../../logic/useBrands";
+import SearchInput from "./searchInput";
 
 const BrandList = (props) => {
+  const { items, retrive, filter } = useBrand();
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  React.useEffect(() => retrive(0), []);
+
+  React.useEffect(() => {
+    if (searchQuery.length === 0) {
+      retrive(0);
+      return;
+    }
+    filter(0, { title: searchQuery });
+  }, [searchQuery]);
+
   return (
-    <List sx={{ width: "100%" }} >
-      {[0, 1, 2, 3].map((value) => {
-        return (
-          <ListItem key={value} disablePadding>
-            <ListItemButton dense>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  tabIndex={-1}
-                  disableRipple
-                  sx={{
-                    color: grey[900],
-                    "&.Mui-checked": {
+    <React.Fragment>
+      <SearchInput search={(t) => setSearchQuery(t)} />
+      <List sx={{ width: "100%", height: 400, overflow: "auto" }}>
+        {items.map((value) => {
+          const checked = props.checked === undefined ? false : props.checked.includes(value.id)
+          return (
+            <ListItem key={value.id} disablePadding>
+              <ListItemButton dense>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    tabIndex={-1}
+                    disableRipple
+                    checked={checked}
+                    onClick={() => {
+                      if(checked){
+                        props.brandUnset(value.id)
+                        return
+                      }
+                      props.brandSet(value.id);
+                    }}
+                    sx={{
                       color: grey[900],
-                    },
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText primary={`Line item ${value + 1}`} />
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-    </List>
+                      "&.Mui-checked": {
+                        color: grey[900],
+                      },
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={value.title} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
+    </React.Fragment>
   );
 };
 
