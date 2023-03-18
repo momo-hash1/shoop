@@ -6,6 +6,7 @@ import GoToShoppingCart from "../nav/goToShoppingCart";
 import Paginator from "../paginator";
 import useProduct from "../../logic/useProduct";
 import { Typography } from "@mui/material";
+import Messages from "../messages";
 
 const ShopPage = () => {
   const { items, loading, offset, max, retrive, filter, setOffset } =
@@ -42,6 +43,7 @@ const ShopPage = () => {
         )}
       </WithAside>
       <GoToShoppingCart />
+      <Messages />
     </React.Fragment>
   );
 };

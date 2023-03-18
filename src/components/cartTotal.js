@@ -6,15 +6,16 @@ import Grid from "@mui/material/Grid";
 import { getCart } from "../logic/cart";
 
 const CartTotal = (props) => {
-  const [hasItem, setHasItem] = React.useState(false)
+  const [hasItem, setHasItem] = React.useState(false);
   React.useEffect(() => {
-    setHasItem(getCart().length === 0)
+    setHasItem(getCart().length === 0);
     const listenStorage = () => {
-      setHasItem(getCart().length === 0)
+      setHasItem(getCart().length === 0);
     };
     window.addEventListener("storage", listenStorage);
     return () => window.removeEventListener("storage", listenStorage);
   }, []);
+
   return (
     <Box sx={{ marginTop: 1, marginBottom: 1 }}>
       <Typography variant="h3">In cart {props.total} items</Typography>
@@ -35,7 +36,6 @@ const CartTotal = (props) => {
             variant="contained"
             color="error"
             disabled={hasItem}
-
             onClick={() => props.clearCart()}
             sx={{ marginTop: 2, marginBottom: 2 }}
           >

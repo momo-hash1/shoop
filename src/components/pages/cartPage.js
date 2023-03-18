@@ -6,11 +6,15 @@ import { Container } from "@mui/system";
 import CartTotal from "../cartTotal";
 import useProduct from "../../logic/useProduct";
 import { clearCart, getCart } from "../../logic/cart";
+import useOrder from "../../logic/useOrder";
 
 const CartPage = () => {
   const [items, setItem] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [totalPrice, setTotalPrice] = React.useState(0);
+
+  const { order } = useOrder();
+
   React.useEffect(() => {
     setItem(getCart());
     setTotal(calcTotal(getCart()));
@@ -45,7 +49,12 @@ const CartPage = () => {
   return (
     <Container sx={{ marginTop: 5 }}>
       <ReturnTo link="/" title="Go home" />
-      <CartTotal total={total} price={totalPrice} clearCart={clearCart} />
+      <CartTotal
+        total={total}
+        price={totalPrice}
+        clearCart={clearCart}
+        doOrder={() => order(getCart())}
+      />
       <ShopItemList shopList={items.map((x) => x.item)} />
     </Container>
   );
