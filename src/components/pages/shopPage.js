@@ -14,7 +14,6 @@ const ShopPage = () => {
   const [query, setQuery] = React.useState({});
 
   React.useEffect(() => {
-    console.log(query);
     if (Object.keys(query).length !== 0) {
       filter(query);
       return;
@@ -31,16 +30,13 @@ const ShopPage = () => {
             hasQuery={Object.keys(query).length > 0}
             clear={() => {
               setQuery({});
-              setOffset(1 );
+              setOffset(1);
             }}
           />
         }
       >
-        {items.length === 0 ? (
-          <Typography variant="h5">Nothing</Typography>
-        ) : (
-          <ShopItemList shopList={items} loading={loading} />
-        )}
+        <ShopItemList shopList={items} loading={loading} />
+
         {items.length > 0 && max > 5 && (
           <Paginator page={offset} setPage={setOffset} amount={max} />
         )}

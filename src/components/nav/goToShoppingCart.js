@@ -8,7 +8,16 @@ import { getCart } from "../../logic/cart";
 const GoToShoppingCart = () => {
   const navigate = useNavigate();
   const [cartItem, setCartItem] = React.useState([]);
-  React.useEffect(() => setCartItem(getCart()), [getCart()]);
+
+  React.useEffect(() => {
+    setCartItem(getCart())
+    const listenStorage = () => {
+      setCartItem(getCart());
+    };
+    window.addEventListener("storage", listenStorage);
+    return () => window.removeEventListener("storage", listenStorage);
+  }, []);
+
   return (
     <Fab
       sx={{ position: "fixed", bottom: 16, right: 16 }}

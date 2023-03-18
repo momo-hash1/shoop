@@ -28,7 +28,12 @@ const ShopItemCard = (props) => {
 
   React.useEffect(() => {
     setInCart(inCart(props.id));
-  }, [getCart()]);
+    const listenStorage = () => {
+      setInCart(inCart(props.id));
+    };
+    window.addEventListener("storage", listenStorage);
+    return () => window.removeEventListener("storage", listenStorage);
+  }, []);
   return (
     <Card>
       <CardMedia
@@ -73,8 +78,8 @@ const ShopItemCard = (props) => {
               if (isInCart) {
                 addAmount(props.id, amount);
               } else {
-                if(amount === 0) return
-                addToCart(props.id, amount);
+                if (amount === 0) return;
+                addToCart(props.id, amount, props);
                 setInCart(true);
               }
               setDirty(false);
@@ -88,8 +93,9 @@ const ShopItemCard = (props) => {
               size="small"
               onClick={() => {
                 removeFromCart(props.id);
-                setDirty(false)
-                setInCart(false)
+                setDirty(false);
+                setInCart(false);
+                setAmount(0);
               }}
             >
               Remove from cart
