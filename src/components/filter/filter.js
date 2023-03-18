@@ -9,7 +9,9 @@ const Filter = (props) => {
   const [brands, setBrands] = React.useState([]);
   const [price, setPrice] = React.useState([]);
 
-  React.useEffect(() => setChanged(props.hasQuery), [props.hasQuery]);
+  React.useEffect(() => {
+    setChanged(props.hasQuery);
+  }, [props.hasQuery]);
 
   return (
     <React.Fragment>
@@ -44,6 +46,11 @@ const Filter = (props) => {
                 props.clear();
                 setBrands([]);
                 setPrice([]);
+                return;
+              }
+              if (brands.length === 0 && price.length === 0) {
+                props.filterProducts({});
+                setChanged(false);
                 return;
               }
               props.filterProducts({ brands, price });

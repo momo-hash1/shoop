@@ -5,19 +5,21 @@ import WithAside from "../withAside";
 import GoToShoppingCart from "../nav/goToShoppingCart";
 import Paginator from "../paginator";
 import useProduct from "../../logic/useProduct";
+import { Typography } from "@mui/material";
 
 const ShopPage = () => {
-  const { items, loading, retrive, filter } = useProduct();
-  const [offset, setOffset] = React.useState(0);
+  const { items, loading, offset, max, retrive, filter, setOffset } =
+    useProduct();
 
   const [query, setQuery] = React.useState({});
 
   React.useEffect(() => {
+    console.log(query);
     if (Object.keys(query).length !== 0) {
-      filter(offset, query);
-      return 
+      filter(query);
+      return;
     }
-    retrive(offset);
+    retrive();
   }, [offset, query]);
 
   return (
@@ -29,12 +31,19 @@ const ShopPage = () => {
             hasQuery={Object.keys(query).length > 0}
             clear={() => {
               setQuery({});
+              setOffset(1 );
             }}
           />
         }
       >
-        <ShopItemList shopList={items} loading={loading} />
-        <Paginator />
+        {items.length === 0 ? (
+          <Typography variant="h5">Nothing</Typography>
+        ) : (
+          <ShopItemList shopList={items} loading={loading} />
+        )}
+        {items.length > 0 && max > 5 && (
+          <Paginator page={offset} setPage={setOffset} amount={max} />
+        )}
       </WithAside>
       <GoToShoppingCart />
     </React.Fragment>

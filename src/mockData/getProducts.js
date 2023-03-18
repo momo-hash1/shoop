@@ -1,3 +1,5 @@
+import getOffset from "./getOffset";
+
 const getProductsObj = () => {
   const products = [
     {
@@ -134,7 +136,10 @@ const getProductsObj = () => {
     }
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(filteredProducts.slice(offset, offset + 6));
+        resolve({
+          item: filteredProducts.slice(...getOffset(offset)),
+          max: filteredProducts.length,
+        });
       }, 500);
     });
   };
@@ -142,7 +147,10 @@ const getProductsObj = () => {
   const get = (offset) =>
     new Promise((resolve) => {
       setTimeout(() => {
-        resolve(products.slice(offset, offset + 6));
+        resolve({
+          item: products.slice(...getOffset(offset)),
+          max: products.length,
+        });
       }, 500);
     });
 

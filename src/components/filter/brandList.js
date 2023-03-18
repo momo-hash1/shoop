@@ -13,14 +13,14 @@ const BrandList = (props) => {
   const { items, retrive, filter } = useBrand();
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  React.useEffect(() => retrive(0), []);
+  React.useEffect(() => retrive(), []);
 
   React.useEffect(() => {
     if (searchQuery.length === 0) {
-      retrive(0);
+      retrive();
       return;
     }
-    filter(0, { title: searchQuery });
+    filter({ title: searchQuery });
   }, [searchQuery]);
 
   return (

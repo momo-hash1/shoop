@@ -1,3 +1,5 @@
+import getOffset from "./getOffset";
+
 const getBrandsObj = (offset) => {
   const brands = [
     {
@@ -58,18 +60,22 @@ const getBrandsObj = (offset) => {
   const filterItem = (offset, filterQuery) =>
     new Promise((resolve) =>
       setTimeout(
-        resolve(
-          brands
+        resolve({
+          item: brands
             .filter((x) => x.title.toLowerCase().match(filterQuery.title))
-            .slice(offset, offset + 5)
-        ),
+            .slice(...getOffset(offset)),
+          max: null,
+        }),
         450
       )
     );
 
   const get = (offset) =>
     new Promise((resolve) =>
-      setTimeout(resolve(brands.slice(offset, offset + 5)), 450)
+      setTimeout(
+        resolve({ item: brands.slice(...getOffset(offset)), max: null }),
+        450
+      )
     );
 
   return { get, filterItem };
