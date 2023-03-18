@@ -8,9 +8,27 @@ import Typography from "@mui/material/Typography";
 import AmountSelector from "../amountSelector";
 import PriceLabel from "../priceLabel";
 import Grid from "@mui/material/Grid";
+import Cart, {
+  addAmount,
+  addToCart,
+  getAmount,
+  getCart,
+  removeFromCart,
+} from "../../logic/cart";
+import { inCart } from "../../logic/cart";
 
 const ShopItemCard = (props) => {
-  const inCart = true;
+  const [dirty, setDirty] = React.useState(false);
+  const [amount, setAmount] = React.useState(0);
+  const [isInCart, setInCart] = React.useState(true);
+
+  React.useEffect(() => {
+    setAmount(getAmount(props.id));
+  }, []);
+
+  React.useEffect(() => {
+    setInCart(inCart(props.id));
+  }, [getCart()]);
   return (
     <Card>
       <CardMedia
@@ -25,7 +43,7 @@ const ShopItemCard = (props) => {
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {props.title}{" "}
-          {inCart && <Typography variant="overline">(in cart)</Typography>}
+          {isInCart && <Typography variant="overline">(in cart)</Typography>}
         </Typography>
         <Grid container alignItems="center" gap={2}>
           <Grid item>
@@ -40,17 +58,43 @@ const ShopItemCard = (props) => {
         </Grid>
 
         <Typography variant="subtitle1">Amount: </Typography>
-        <AmountSelector />
+        <AmountSelector
+          id={props.id}
+          amount={amount}
+          setDirty={setDirty}
+          setAmount={setAmount}
+        />
       </CardContent>
       <CardActions>
-        {inCart ? (
+        {dirty || !isInCart ? (
+          <Button
+            size="small"
+            onClick={() => {
+              if (isInCart) {
+                addAmount(props.id, amount);
+              } else {
+                if(amount === 0) return
+                addToCart(props.id, amount);
+                setInCart(true);
+              }
+              setDirty(false);
+            }}
+          >
+            Add to cart
+          </Button>
+        ) : (
           <React.Fragment>
-            <Button size="small" onClick={() => {}}>
+            <Button
+              size="small"
+              onClick={() => {
+                removeFromCart(props.id);
+                setDirty(false)
+                setInCart(false)
+              }}
+            >
               Remove from cart
             </Button>
           </React.Fragment>
-        ) : (
-          <Button size="small">Add to cart</Button>
         )}
       </CardActions>
     </Card>
